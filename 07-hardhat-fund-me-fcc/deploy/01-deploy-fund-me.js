@@ -3,7 +3,7 @@
 // }
 
 const { network } = require("hardhat")
-const { networkConfig, developmentChain } = require("../helper-hardhat-config")
+const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 require("dotenv").config()
 const { verify } = require("../utils/verify")
 
@@ -16,7 +16,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     let ethUsdPriceFeedAddress
     // const ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
-    if (developmentChain.includes(network.name)) {
+    if (developmentChains.includes(network.name)) {
         const ethUsdAggregator = await deployments.get("MockV3Aggregator")
         ethUsdPriceFeedAddress = ethUsdAggregator.address
     } else {
@@ -31,7 +31,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         waitConfirmations: network.config.waitConfirmations || 1
     })
 
-    if (!developmentChain.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         await verify(fundMe.address, args)
     }
     log("--------------------------------------------")
