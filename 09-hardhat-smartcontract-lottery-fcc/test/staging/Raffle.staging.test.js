@@ -21,7 +21,7 @@ developmentChains.includes(network.name)
                     raffle.once("WinnerPicked", async () => {
                         console.log("WinnerPicked event fired!")
                         try {
-                            const recentWinner = await raffle.getRencentWinner()
+                            const recentWinner = await raffle.getRecentWinner()
                             const raffleState = await raffle.getRaffleState()
                             const winnerEndingBalance = await accounts[0].getBalance()
                             const endingTimeStamp = await raffle.getLatestTimeStamp()
@@ -36,7 +36,8 @@ developmentChains.includes(network.name)
                             reject(error)
                         }
                     })
-                    await raffle.enterRaffle({ value: raffleEntranceFee })
+                    const tx = await raffle.enterRaffle({ value: raffleEntranceFee })
+                    await tx.wait(1)
                     const winnerStartingBalance = await accounts[0].getBalance()
                 })
             })
