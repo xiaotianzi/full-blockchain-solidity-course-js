@@ -1,16 +1,11 @@
-import styles from './page.module.css'
+"use client"
 
-export const metadata = {
-  title: 'Smart Contract Lottery',
-  description: 'Our Smart Contract Lottery',
-  // icons: {
-  //   icon: "",
-  // }
-}
+import ManualHeader from "./components/ManualHeader"
 
 export default function Home() {
   return (
     <div>
+      <ManualHeader />
       test
     </div>
   )
