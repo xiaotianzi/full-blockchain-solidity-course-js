@@ -1580,7 +1580,7 @@
     "@web3uikit/styles" "*"
     react-router-dom "^6.3.0"
 
-"@web3uikit/icons@*":
+"@web3uikit/icons@*", "@web3uikit/icons@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-1.1.2.tgz#eb87298904351f79601b9e45a09c6121ba3dc94b"
   integrity sha512-ewoHjawkrcWf2INUsOYS5Oa1f106dMyCoLj2mmjWaZYsds3ZkyfwNzq+hb5xavYL3DMIayVqzsUzBXjNAg8NuA==

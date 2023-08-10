@@ -1,6 +1,7 @@
 "use client"
 
 import { MoralisProvider } from "react-moralis"
+import { NotificationProvider } from "web3uikit"
 
 export const metadata = {
   title: 'Smart Contract Lottery',
@@ -11,7 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <MoralisProvider initializeOnMount={false}>
-        <body>{children}</body>
+        <NotificationProvider>
+          <body>{children}</body>
+        </NotificationProvider>
       </MoralisProvider>
     </html >
   )
