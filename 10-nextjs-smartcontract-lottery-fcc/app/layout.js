@@ -2,6 +2,7 @@
 
 import { MoralisProvider } from "react-moralis"
 import { NotificationProvider } from "web3uikit"
+import "./globals.css"
 
 export const metadata = {
   title: 'Smart Contract Lottery',

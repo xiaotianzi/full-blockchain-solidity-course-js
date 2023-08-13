@@ -7,6 +7,8 @@ import { useNotification } from "web3uikit"
 
 const LotteryEntrance = () => {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
+    // const [chainId, setChainId] = useState(0)
+    // setChainId(parseInt(chainIdHex))
     const chainId = parseInt(chainIdHex)
     const raffleAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
     const [entranceFee, setEntranceFee] = useState("0")
@@ -15,7 +17,7 @@ const LotteryEntrance = () => {
 
     const dispatch = useNotification()
 
-    const { runContractFunction: enterRaffle } = useWeb3Contract({
+    const { runContractFunction: enterRaffle, isLoading, isFetching } = useWeb3Contract({
         abi: abi,
         contractAddress: raffleAddress,
         functionName: "enterRaffle",
@@ -51,6 +53,9 @@ const LotteryEntrance = () => {
         setEntranceFee(entranceFeeFromCall)
         setNumPlayers(numPlayersFromCall)
         setRecentWinner(recentWinnerFromCall)
+        console.log(numPlayersFromCall)
+        console.log(recentWinnerFromCall)
+        console.log("updateUIFinished")
     }
 
     useEffect(() => {
@@ -58,6 +63,22 @@ const LotteryEntrance = () => {
             updateUI()
         }
     }, [isWeb3Enabled])
+
+    useEffect(() => {
+        if (chainId == 31337) {
+            const HARDHAT_RPC_URL = "http://127.0.0.1:8545/";
+            const provider = new ethers.providers.JsonRpcProvider(HARDHAT_RPC_URL);
+            const contractRaffle = new ethers.Contract(raffleAddress, abi, provider);
+            contractRaffle.on("WinnerPicked", async () => {
+                await provider.send("evm_mine")
+                console.log("WinnerPicked!")
+                const numPlayersFromCall = (await getNumberOfPlayers()).toString()
+                const recentWinnerFromCall = await getRecentWinner()
+                setNumPlayers(numPlayersFromCall)
+                setRecentWinner(recentWinnerFromCall)
+            });
+        }
+    }, [chainId]); // 仅在 chainId 变化时注册事件监听器    
 
     const handleSuccess = async function (tx) {
         await tx.wait(1)
@@ -75,20 +96,26 @@ const LotteryEntrance = () => {
     }
 
     return (
-        <div>
+        <div className="p-5">
             LotteryEntrance
             {raffleAddress
                 ? (
                     <div>
-                        <button onClick={async function () {
+                        <button className="bg-blue-500  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto" onClick={async function () {
                             await enterRaffle({
                                 onSuccess: handleSuccess,
                                 onError: (error) => { console.log(error) }
                             })
-                        }}>EnterRaffle</button>
-                        Entrance Fee: {ethers.utils.formatUnits(entranceFee)} ETH
-                        Number of Players: {numPlayers}
-                        Recent Winner: {recentWinner}
+                        }} disabled={isLoading || isFetching}>
+                            {
+                                isLoading || isFetching
+                                    ? (<div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>)
+                                    : (<div>Enter Raffle</div>)
+                            }
+                        </button>
+                        <div>Entrance Fee: {ethers.utils.formatUnits(entranceFee)} ETH</div>
+                        <div>Number of Players: {numPlayers}</div>
+                        <div>Recent Winner: {recentWinner}</div>
                     </div>
                 )
                 : (<div>No Raffle Address Detected</div>)}
