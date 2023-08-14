@@ -7,8 +7,6 @@ import { useNotification } from "web3uikit"
 
 const LotteryEntrance = () => {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
-    // const [chainId, setChainId] = useState(0)
-    // setChainId(parseInt(chainIdHex))
     const chainId = parseInt(chainIdHex)
     const raffleAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
     const [entranceFee, setEntranceFee] = useState("0")
