@@ -4,10 +4,10 @@ import { MoralisProvider } from "react-moralis"
 import { NotificationProvider } from "web3uikit"
 import "./globals.css"
 
-export const metadata = {
-  title: 'Smart Contract Lottery',
-  description: 'Our Smart Contract Lottery',
-}
+// export const metadata = {
+//   title: 'Smart Contract Lottery',
+//   description: 'Our Smart Contract Lottery',
+// }
 
 export default function RootLayout({ children }) {
   return (
