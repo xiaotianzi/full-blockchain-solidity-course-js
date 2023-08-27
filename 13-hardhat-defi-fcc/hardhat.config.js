@@ -29,12 +29,6 @@ module.exports = {
     localhost: {
       chainId: 31337,
     },
-    goerli: {
-      url: GOERLI_RPC_URL,
-      accounts: [PRIVATE_KEY],
-      chainId: 5,
-      blockConfirmations: 6,
-    },
     sepolia: {
       url: SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
@@ -46,6 +40,12 @@ module.exports = {
     compilers: [
       {
         version: "0.8.19",
+      },
+      {
+        version: "0.6.0",
+      },
+      {
+        version: "0.6.6",
       },
       {
         version: "0.6.12",
