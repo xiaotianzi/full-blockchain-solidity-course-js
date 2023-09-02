@@ -1,8 +1,8 @@
 const networkConfig = {
     31337: {
         name: "localhost",
-        ethUsdPriceFeed: "0x694AA1769357215DE4FAC081bf1f309aDC325306",
-        gasLane: "0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c", // 30 gwei
+        ethUsdPriceFeed: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+        gasLane: "0xff8dedfbfa60af186cf3c830acbc32c05aae823045ae5ea7da1e45fbfaba4f92", // 500 gwei
         mintFee: "10000000000000000", // 0.01 ETH
         callbackGasLimit: "500000", // 500,000 gas
     },
