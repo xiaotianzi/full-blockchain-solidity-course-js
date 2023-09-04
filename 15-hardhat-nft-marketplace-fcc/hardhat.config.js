@@ -18,7 +18,7 @@ const SEPOLIA_RPC_URL =
     process.env.SEPOLIA_RPC_URL || "https://eth-sepolia.g.alchemy.com/v2/YOUR-API-KEY"
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
 // optional
-const MNEMONIC = process.env.MNEMONIC || "your mnemonic"
+// const MNEMONIC = process.env.MNEMONIC || "your mnemonic"
 
 // Your API key for Etherscan, obtain one at https://etherscan.io/
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
@@ -45,6 +45,7 @@ module.exports = {
             //   },
             saveDeployments: true,
             chainId: 11155111,
+            blockConfirmations: 6,
         },
         mainnet: {
             url: MAINNET_RPC_URL,
@@ -54,6 +55,7 @@ module.exports = {
             //   },
             saveDeployments: true,
             chainId: 1,
+            blockConfirmations: 6,
         },
     },
     etherscan: {
