@@ -1,6 +1,7 @@
 "use client"
 
 import { MoralisProvider } from "react-moralis"
+import "./globals.css"
 
 export const metadata = {
   title: 'NFT Marketplace',
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <MoralisProvider initializeOnMount={false}>
+        {/* <Header /> */}
         <body>{children}</body>
       </MoralisProvider>
     </html>
