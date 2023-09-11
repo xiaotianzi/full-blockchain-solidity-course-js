@@ -1,6 +1,7 @@
 const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } = require("../helper-hardhat-config")
-const { network } = require("hardhat")
+const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify")
+
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -12,22 +13,29 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     log("----------------------------------------------------")
 
-    const boxv2 = await deploy("BoxV2", {
+    const governanceToken = await deploy("GovernanceToken", {
         from: deployer,
         args: [],
         log: true,
         waitConfirmations: waitBlockConfirmations,
     })
-
-    // Be sure to check out the hardhat-deploy examples to use UUPS proxies!
-    // https://github.com/wighawag/template-ethereum-contracts
+    log(`GovernanceToken at ${governanceToken.address}`)
 
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(boxv2.address, [])
+        await verify(governanceToken.address, [])
     }
+    log(`Delegating to ${deployer}`)
+    const delegate = async (governanceTokenAddress, delegatedAccount) => {
+        const governanceToken = await ethers.getContractAt("GovernanceToken", governanceTokenAddress)
+        const transactionResponse = await governanceToken.delegate(delegatedAccount)
+        await transactionResponse.wait(1)
+        console.log(`Checkpoints: ${await governanceToken.numCheckpoints(delegatedAccount)}`)
+    }
+    await delegate(governanceToken.address, deployer)
+    log("Delegated!")
     log("----------------------------------------------------")
 }
 
-module.exports.tags = ["all", "boxv2"]
+module.exports.tags = ["all", "governanceToken"]

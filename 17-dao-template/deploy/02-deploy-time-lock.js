@@ -1,6 +1,7 @@
-const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } = require("../helper-hardhat-config")
-const { network } = require("hardhat")
+const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS, MIN_DELAY } = require("../helper-hardhat-config")
+const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify")
+
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -12,22 +13,21 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     log("----------------------------------------------------")
 
-    const boxv2 = await deploy("BoxV2", {
+    const args = [MIN_DELAY, [], [], deployer]
+
+    const timeLock = await deploy("TimeLock", {
         from: deployer,
-        args: [],
+        args: args,
         log: true,
         waitConfirmations: waitBlockConfirmations,
     })
-
-    // Be sure to check out the hardhat-deploy examples to use UUPS proxies!
-    // https://github.com/wighawag/template-ethereum-contracts
+    log(`TimeLock at ${timeLock.address}`)
 
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(boxv2.address, [])
+        await verify(timeLock.address, args)
     }
-    log("----------------------------------------------------")
 }
 
-module.exports.tags = ["all", "boxv2"]
+module.exports.tags = ["all", "timeLock"]
