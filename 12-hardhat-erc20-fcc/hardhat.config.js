@@ -13,12 +13,14 @@ require("dotenv").config()
 const SEPOLIA_RPC_URL =
   process.env.SEPOLIA_RPC_URL ||
   "https://eth-sepolia.g.alchemy.com/v2/YOUR-API-KEY"
+const ARBITRUM_RPC_URL = process.env.ARBITRUM_RPC_URL || "https://arb-mainnet.g.alchemy.com/v2/YOUR-API-KEY"
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 // optional
 
 // Your API key for Etherscan, obtain one at https://etherscan.io/
 const ETHERSCAN_API_KEY =
   process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
+const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || "Your arbiscan API key"
 const REPORT_GAS = process.env.REPORT_GAS.toLowerCase() === "true" || false
 
 module.exports = {
@@ -44,6 +46,16 @@ module.exports = {
       chainId: 11155111,
       blockConfirmation: 6,
     },
+    arbitrum: {
+      url: ARBITRUM_RPC_URL,
+      accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+      //accounts: {
+      //     mnemonic: MNEMONIC,
+      // },
+      saveDeployments: true,
+      chainId: 42161,
+      blockConfirmation: 6,
+    },
     // mainnet: {
     //   url: MAINNET_RPC_URL,
     //   accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
@@ -64,8 +76,10 @@ module.exports = {
     // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
     apiKey: {
       sepolia: ETHERSCAN_API_KEY,
+      arbitrumOne: ARBISCAN_API_KEY
       // polygon: POLYGONSCAN_API_KEY,
     },
+    customChains: [],
   },
   gasReporter: {
     enabled: REPORT_GAS,
