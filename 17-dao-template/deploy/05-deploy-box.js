@@ -1,10 +1,10 @@
-const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS, VOTING_DELAY, VOTING_PERIOD, QUORUM_PERCENTAGE } = require("../helper-hardhat-config")
+const { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } = require("../helper-hardhat-config")
 const { network, ethers } = require("hardhat")
 const { verify } = require("../utils/verify")
 
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
-    const { deploy, log, get } = deployments
+    const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
 
     const waitBlockConfirmations = developmentChains.includes(network.name)
@@ -13,24 +13,26 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     log("----------------------------------------------------")
 
-    const governanceToken = await get("GovernanceToken")
-    const timeLock = await get("TimeLock")
+    const args = []
 
-    const args = [governanceToken.address, timeLock.address, QUORUM_PERCENTAGE, VOTING_PERIOD, VOTING_DELAY]
-
-    const governorContract = await deploy("GovernorContract", {
+    const box = await deploy("Box", {
         from: deployer,
         args: args,
         log: true,
         waitConfirmations: waitBlockConfirmations,
     })
-    log(`GovernorContract at ${governorContract.address}`)
+    log(`Box at ${box.address}`)
 
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(governorContract.address, args)
+        await verify(box.address, args)
     }
+
+    const boxContract = await ethers.getContractAt("Box", box.address)
+    const timeLock = await ethers.getContract("TimeLock")
+    const transferTx = await boxContract.transferOwnership(timeLock.target)
+    await transferTx.wait(1)
 }
 
-module.exports.tags = ["all", "governorContract"]
+module.exports.tags = ["all", "box"]
